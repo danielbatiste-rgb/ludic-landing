@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LUDIC Asia — Impact by Design</title>
+  <link rel="preload" href="fonts/Idlewild-Book.otf" as="font" type="font/otf" crossorigin>
+  <link rel="preload" href="fonts/HelveticaNeueLTW0545Light.otf" as="font" type="font/otf" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    /* Hide reveal targets only when motion will actually run */
+    if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.add("motion-ready");
+    }
+  </script>
+</head>
+<body>
+<div class="page">
+
+  <!-- Full-page background video: bluegradient8k.mp4, pre-rotated 90°, resized to 1520×5760 (760×2880 on ≤1024px screens) and colour-graded to the supplied reference still -->
+  <div class="page-bg" aria-hidden="true">
+    <!-- Sources are attached by the script at the bottom once the page has loaded.
+         The still (.page-bg background) shows until then, and instead of the video
+         for reduced-motion / Data Saver / slow connections. -->
+    <video class="page-bg__video" muted loop playsinline preload="none">
+      <source data-src="assets/background-mobile.mp4" type="video/mp4" media="(max-width: 1024px)">
+      <source data-src="assets/background-hevc.mp4" type='video/mp4; codecs="hvc1"'>
+      <source data-src="assets/background.mp4" type="video/mp4">
+    </video>
+    <div class="page-bg__grain"></div>
+  </div>
+
+  <!-- Decorative hero linework (vector paths from the PDF, page coordinates).
+       A dim base outline, plus a sheen layer whose gradient band is moved by the
+       script: a timed intro after the title animation, then linked to scroll. -->
+  <svg class="linework" width="1920" height="1400" viewBox="0 0 1920 1400" fill="none" aria-hidden="true">
+    <defs>
+      <path id="lw-1" d="M-94.96 199.84 L184.64 684.12 L80.72 744.12 L-198.88 259.84Z"/>
+      <path id="lw-2" d="M2213.12 960.00L2213.12 840.00L484.21 840.00C459.66 840.00 450.95 807.50 472.21 795.22L969.75 507.96L909.75 404.04L516.13 631.30C494.87 643.57 471.07 619.78 483.35 598.51L1324.64 -858.65L1220.72 -918.65L243.58 773.80C235.15 788.40 223.04 800.52 208.44 808.94L149.03 843.24C144.44 845.89 142.87 851.76 145.52 856.36L161.02 883.20C167.02 893.60 167.02 906.41 161.02 916.80L145.52 943.65C142.87 948.24 144.44 954.11 149.03 956.76L909.75 1395.96L969.75 1292.04L472.21 1004.79C450.95 992.51 459.66 960.00 484.21 960.00L2213.12 960.00"/>
+      <!-- Band runs along the (0.8, 0.6) diagonal; 600 units long, bright in the middle -->
+      <linearGradient id="lw-sheen" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="480" y2="360" gradientTransform="translate(-960 -720)">
+        <stop offset="0" style="stop-color: var(--color-accent-bright); stop-opacity: 0"/>
+        <stop offset="0.5" style="stop-color: var(--color-accent-bright); stop-opacity: 1"/>
+        <stop offset="1" style="stop-color: var(--color-accent-bright); stop-opacity: 0"/>
+      </linearGradient>
+    </defs>
+    <g class="linework__base" stroke="var(--color-linework)" stroke-width="0.75">
+      <use href="#lw-1"/><use href="#lw-2"/>
+    </g>
+    <g class="linework__sheen" stroke="url(#lw-sheen)" stroke-linejoin="round" stroke-linecap="round">
+      <g class="linework__glow" stroke-width="7"><use href="#lw-1"/><use href="#lw-2"/></g>
+      <g class="linework__halo" stroke-width="2.5"><use href="#lw-1"/><use href="#lw-2"/></g>
+      <g class="linework__core" stroke-width="1"><use href="#lw-1"/><use href="#lw-2"/></g>
+    </g>
+  </svg>
+
+  <!-- ============ Header ============ -->
+  <header class="section header" id="top">
+    <div class="grid">
+      <a class="header__logo" href="#top" aria-label="LUDIC Asia — back to top">
+        <svg width="113.65" height="47.66" viewBox="0 0 113.65 47.66" fill="var(--color-logo)">
+        <path d="M2.14 23.03L0.00 24.26L5.76 34.24L7.90 33.00L2.14 23.03"/>
+        <path d="M49.66 38.68L49.66 36.21L14.06 36.21C13.56 36.21 13.38 35.54 13.82 35.29L24.06 29.37L22.83 27.23L14.72 31.91C14.28 32.17 13.79 31.67 14.05 31.24L31.37 1.24L29.23 0.00L9.11 34.85C8.94 35.15 8.69 35.40 8.39 35.57L7.16 36.28C7.07 36.33 7.04 36.45 7.09 36.55L7.41 37.10C7.53 37.31 7.53 37.58 7.41 37.79L7.09 38.34C7.04 38.44 7.07 38.56 7.16 38.61L22.83 47.66L24.06 45.52L13.82 39.60C13.38 39.35 13.56 38.68 14.06 38.68L49.66 38.68"/>
+        <path d="M49.66 12.74L39.78 12.74L39.78 4.09L37.31 4.09L37.31 15.21L49.66 15.21L49.66 12.74"/>
+        <path d="M81.16 12.74L75.60 12.74L75.60 6.56L81.16 6.56C82.86 6.56 84.25 7.95 84.25 9.65C84.25 11.35 82.86 12.74 81.16 12.74M81.16 4.09L73.13 4.09L73.13 15.21L81.16 15.21C84.23 15.21 86.72 12.72 86.72 9.65C86.72 6.58 84.23 4.09 81.16 4.09"/>
+        <path d="M91.66 4.09H94.13V15.21H91.66Z"/>
+        <path d="M41.16 26.33L43.48 22.30L45.81 26.33L41.16 26.33M45.09 20.15L41.87 20.15L35.45 31.27L38.31 31.27L39.73 28.80L47.23 28.80L48.66 31.27L51.51 31.27L45.09 20.15"/>
+        <path d="M68.19 4.09L68.19 11.49C68.19 12.88 67.69 14.00 66.45 14.73C65.11 15.49 63.21 15.72 61.40 15.70C59.58 15.72 57.68 15.49 56.35 14.73C55.10 14.00 54.61 12.88 54.60 11.49L54.60 4.09L57.07 4.09L57.07 11.49C57.07 12.22 57.28 12.41 57.58 12.59C58.35 13.02 59.73 13.25 61.37 13.23L61.42 13.23C63.06 13.25 64.44 13.02 65.21 12.59C65.51 12.41 65.72 12.22 65.72 11.48L65.72 4.09L68.19 4.09"/>
+        <path d="M106.61 15.70C100.90 15.70 99.07 12.97 99.07 9.90C99.07 6.83 100.90 4.09 106.61 4.09C109.46 4.09 111.95 4.63 113.65 6.09L112.04 7.96C110.96 7.03 109.13 6.56 106.61 6.56C101.55 6.56 101.54 8.89 101.54 9.90C101.54 10.90 101.55 13.23 106.61 13.23C109.13 13.23 110.96 12.76 112.04 11.83L113.65 13.70C111.95 15.16 109.46 15.70 106.61 15.70"/>
+        <path d="M73.13 20.15H75.60V31.27H73.13Z"/>
+        <path d="M85.51 26.33L87.83 22.30L90.16 26.33L85.51 26.33M89.44 20.15L86.22 20.15L79.80 31.27L82.66 31.27L84.08 28.80L91.58 28.80L93.01 31.27L95.86 31.27L89.44 20.15"/>
+        <path d="M55.19 21.29C56.04 20.37 57.76 19.90 61.24 19.90C63.84 19.90 66.46 20.35 67.83 20.94L67.83 23.57C66.26 22.85 63.53 22.32 61.27 22.32C58.78 22.32 57.70 22.48 57.37 22.83C57.25 22.96 57.18 23.12 57.18 23.33C57.18 23.55 57.24 23.71 57.36 23.84C57.67 24.17 58.83 24.27 61.52 24.33C65.48 24.43 67.19 24.80 68.02 25.69C68.45 26.16 68.69 26.91 68.69 27.71C68.69 28.57 68.52 29.40 67.95 30.03C67.18 30.86 65.50 31.52 61.49 31.52C58.54 31.52 55.69 31.02 54.11 30.30L54.11 27.68C55.63 28.41 58.94 29.10 61.49 29.10C63.72 29.10 65.29 29.02 65.72 28.56C65.86 28.40 65.89 28.22 65.89 28.04C65.89 27.84 65.85 27.69 65.73 27.57C65.50 27.31 65.10 27.13 61.54 27.02C57.76 26.91 55.90 26.51 55.02 25.57C54.63 25.13 54.39 24.43 54.39 23.61C54.39 22.77 54.54 22.00 55.19 21.29"/>
+        </svg>
+      </a>
+      <nav class="nav body-s" aria-label="Primary">
+        <a href="#work">Work</a>
+        <a href="#about">About</a>
+        <a href="#capabilities">Capabilities</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============ Hero ============ -->
+  <section class="section hero">
+    <div class="grid">
+      <h1 class="hero__headline" data-reveal="lines-side" data-fill="timed">
+        <span class="line hero__kicker display-s" style="letter-spacing:0.1943em">Impact by</span>
+        <span class="line hero__title display-xl" style="letter-spacing:0.1846em">Design</span>
+      </h1>
+      <p class="hero__sub body-xl nowrap" data-reveal="lines" data-reveal-delay="700">
+        <span class="line">We design and deliver the</span>
+        <span class="line">experiences where leaders,</span>
+        <span class="line">ideas and influence meet</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ Trusted by ============ -->
+  <section class="section trusted">
+    <div class="grid">
+      <h2 class="trusted__heading body-xl nowrap" data-reveal="blur">Trusted by</h2>
+    </div>
+    <!-- TEMP: flattened logo strip on black, blended into the page. Swap for individual SVG logos later. -->
+    <img class="logo-grid" data-reveal="fade" src="assets/trusted-by-logos.png" width="1821" height="442" alt="Clients include Ferrari, Maserati, Proton, UEM Sunrise, Rolls-Royce, Mercedes-Benz, Malaysia Airlines, Ducati, Breitling, MaGIC, Vespa, Team Pacquiao, Harley-Davidson, AIA, Triumph, Chevrolet, Menarini, Brabus, Citroën, Aprilia, Dash Resort Langkawi, Green Tech Malaysia, SMG and Koenigsegg">
+  </section>
+
+  <!-- ============ Gallery ============ -->
+  <!-- Gallery: each block shows the silvery-blue mono image; on hover (or, on touch
+       screens, when scrolled to the middle of the screen) it fades to full colour
+       and the project title appears. Images: assets/gallery/ (see GALLERY-IMAGES.md). -->
+  <section class="section gallery" id="work" aria-label="Project gallery">
+    <div class="gallery__column">
+      <figure class="gallery__item gallery__item--s" data-reveal="rise">
+        <img class="gallery__img" src="assets/gallery/01-kl20-summit-2024.jpg" alt="KL20 Summit 2024" width="876" height="345" loading="lazy" decoding="async">
+        <img class="gallery__img gallery__img--mono" src="assets/gallery/01-kl20-summit-2024-mono.jpg" alt="" aria-hidden="true" width="876" height="345" loading="lazy" decoding="async">
+        <figcaption class="gallery__title">KL20 SUMMIT 2024</figcaption>
+      </figure>
+      <figure class="gallery__item gallery__item--m" data-reveal="rise">
+        <img class="gallery__img" src="assets/gallery/02-ai-malaysia-takeover-2026.jpg" alt="AI Malaysia Takeover 2026" width="876" height="645" loading="lazy" decoding="async">
+        <img class="gallery__img gallery__img--mono" src="assets/gallery/02-ai-malaysia-takeover-2026-mono.jpg" alt="" aria-hidden="true" width="876" height="645" loading="lazy" decoding="async">
+        <figcaption class="gallery__title">AI MALAYSIA<br>TAKEOVER 2026_</figcaption>
+      </figure>
+      <figure class="gallery__item gallery__item--l" data-reveal="rise">
+        <img class="gallery__img" src="assets/gallery/03-zurich-nite-of-the-stars.jpg" alt="Zurich Nite of the Stars" width="876" height="876" loading="lazy" decoding="async">
+        <img class="gallery__img gallery__img--mono" src="assets/gallery/03-zurich-nite-of-the-stars-mono.jpg" alt="" aria-hidden="true" width="876" height="876" loading="lazy" decoding="async">
+        <figcaption class="gallery__title">ZURICH NITE OF THE STARS</figcaption>
+      </figure>
+      <figure class="gallery__item gallery__item--m" data-reveal="rise">
+        <img class="gallery__img" src="assets/gallery/04-david-beckham-x-breitling.jpg" alt="David Beckham × Breitling" width="876" height="645" loading="lazy" decoding="async">
+        <img class="gallery__img gallery__img--mono" src="assets/gallery/04-david-beckham-x-breitling-mono.jpg" alt="" aria-hidden="true" width="876" height="645" loading="lazy" decoding="async">
+        <figcaption class="gallery__title">DAVID BECKHAM<br>× BREITLING</figcaption>
+      </figure>
+    </div>
+    <div class="gallery__column">
+      <figure class="gallery__item gallery__item--l" data-reveal="rise">
+        <img class="gallery__img" src="assets/gallery/05-asean-ai-malaysia-summit-2025.jpg" alt="ASEAN AI Malaysia Summit 2025" width="876" height="876" loading="lazy" decoding="async">
+        <img class="gallery__img gallery__img--mono" src="assets/gallery/05-asean-ai-malaysia-summit-2025-mono.jpg" alt="" aria-hidden="true" width="876" height="876" loading="lazy" decoding="async">
+        <figcaption class="gallery__title">ASEAN AI MALAYSIA<br>SUMMIT 2025</figcaption>
+      </figure>
+      <figure class="gallery__item gallery__item--m" data-reveal="rise">
+        <img class="gallery__img" src="assets/gallery/06-ferrari-kl-showroom-launch.jpg" alt="Ferrari KL Showroom Launch" width="876" height="645" loading="lazy" decoding="async">
+        <img class="gallery__img gallery__img--mono" src="assets/gallery/06-ferrari-kl-showroom-launch-mono.jpg" alt="" aria-hidden="true" width="876" height="645" loading="lazy" decoding="async">
+        <figcaption class="gallery__title">FERRARI KL<br>SHOWROOM LAUNCH</figcaption>
+      </figure>
+      <figure class="gallery__item gallery__item--m" data-reveal="rise">
+        <img class="gallery__img" src="assets/gallery/07-proton-s70-mc-livestream-launch.jpg" alt="Proton S70 MC Livestream Launch" width="876" height="645" loading="lazy" decoding="async">
+        <img class="gallery__img gallery__img--mono" src="assets/gallery/07-proton-s70-mc-livestream-launch-mono.jpg" alt="" aria-hidden="true" width="876" height="645" loading="lazy" decoding="async">
+        <figcaption class="gallery__title">PROTON S70 MC<br>LIVESTREAM LAUNCH</figcaption>
+      </figure>
+      <figure class="gallery__item gallery__item--s" data-reveal="rise">
+        <img class="gallery__img" src="assets/gallery/08-duopharma-superbolt-fun-run-2025.jpg" alt="Duopharma Superbolt Fun Run 2025" width="876" height="345" loading="lazy" decoding="async">
+        <img class="gallery__img gallery__img--mono" src="assets/gallery/08-duopharma-superbolt-fun-run-2025-mono.jpg" alt="" aria-hidden="true" width="876" height="345" loading="lazy" decoding="async">
+        <figcaption class="gallery__title">DUOPHARMA SUPERBOLT<br>FUN RUN 2025</figcaption>
+      </figure>
+    </div>
+    <div class="gallery__column">
+      <figure class="gallery__item gallery__item--m" data-reveal="rise">
+        <img class="gallery__img" src="assets/gallery/09-merdeka-118-spire-completion.jpg" alt="Merdeka 118 Spire Completion" width="876" height="645" loading="lazy" decoding="async">
+        <img class="gallery__img gallery__img--mono" src="assets/gallery/09-merdeka-118-spire-completion-mono.jpg" alt="" aria-hidden="true" width="876" height="645" loading="lazy" decoding="async">
+        <figcaption class="gallery__title">MERDEKA 118 SPIRE<br>COMPLETION</figcaption>
+      </figure>
+      <figure class="gallery__item gallery__item--m" data-reveal="rise">
+        <img class="gallery__img" src="assets/gallery/10-pacquiao-vs-matthysse.jpg" alt="Manny Pacquiao vs. Lucas Matthysse" width="876" height="645" loading="lazy" decoding="async">
+        <img class="gallery__img gallery__img--mono" src="assets/gallery/10-pacquiao-vs-matthysse-mono.jpg" alt="" aria-hidden="true" width="876" height="645" loading="lazy" decoding="async">
+        <figcaption class="gallery__title">MANNY PACQUIAO VS.<br>LUCAS MATTHYSSE</figcaption>
+      </figure>
+      <figure class="gallery__item gallery__item--s" data-reveal="rise">
+        <img class="gallery__img" src="assets/gallery/11-proton-10000-smiles-campaign.jpg" alt="Proton 10,000 Smiles Campaign" width="876" height="345" loading="lazy" decoding="async">
+        <img class="gallery__img gallery__img--mono" src="assets/gallery/11-proton-10000-smiles-campaign-mono.jpg" alt="" aria-hidden="true" width="876" height="345" loading="lazy" decoding="async">
+        <figcaption class="gallery__title">PROTON 10,000<br>SMILES CAMPAIGN</figcaption>
+      </figure>
+      <figure class="gallery__item gallery__item--l" data-reveal="rise">
+        <img class="gallery__img" src="assets/gallery/12-ferrari-812-superfast-launch.jpg" alt="Ferrari 812 Superfast Launch" width="876" height="876" loading="lazy" decoding="async">
+        <img class="gallery__img gallery__img--mono" src="assets/gallery/12-ferrari-812-superfast-launch-mono.jpg" alt="" aria-hidden="true" width="876" height="876" loading="lazy" decoding="async">
+        <figcaption class="gallery__title">FERRARI 812<br>SUPERFAST LAUNCH</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ More than an event ============ -->
+  <section class="section statement" id="about">
+    <div class="grid">
+      <h2 class="statement__text display-xl trim" data-reveal="lines-side" data-fill>
+        <span class="line statement__line1" style="letter-spacing:0.1453em">More than</span>
+        <span class="line statement__line2" style="letter-spacing:0.1496em">An event</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- ============ Media ============ -->
+  <section class="section media" aria-label="LUDIC company film" data-reveal="rise">
+    <!-- Company film on YouTube (youtu.be/9edV64Y75zY). The poster shows until play is
+         pressed; only then is the YouTube player (privacy-enhanced mode) loaded. -->
+    <img class="media__poster" src="assets/company-film-poster.jpg" alt="" width="1789" height="1013" loading="lazy" decoding="async">
+    <button class="media__play" type="button" aria-label="Play the LUDIC company film">
+      <svg class="media__icon" width="1800" height="1012.5" viewBox="60 4216.2 1800 1012.5" aria-hidden="true">
+        <circle cx="960" cy="4683.9" r="136.6" fill="none" stroke="var(--color-text)" stroke-width="3.87"/>
+        <path fill="var(--color-text)" d="M924.31 4629.65L924.31 4738.07C924.31 4741.87 928.53 4744.15 931.71 4742.06L1014.16 4687.85C1017.03 4685.96 1017.03 4681.76 1014.16 4679.87L931.71 4625.66C928.53 4623.57 924.31 4625.85 924.31 4629.65Z"/>
+      </svg>
+    </button>
+  </section>
+
+  <!-- ============ Editorial ============ -->
+  <section class="section editorial">
+    <div class="grid">
+      <p class="editorial__intro body-m trim" data-reveal="lines">
+        <span class="line">We believe the best events are built around more</span>
+        <span class="line">than what happens on stage. They are shaped by</span>
+        <span class="line">the people in the room, the message being delivered</span>
+        <span class="line">and what happens when the two come together.</span>
+      </p>
+      <div class="editorial__statement display-s trim" data-reveal="lines-side" data-sides="left" data-fill>
+        <p>
+          <span class="line" style="letter-spacing:0.1846em">From government</span>
+          <span class="line" style="letter-spacing:0.1941em">summits and global</span>
+          <span class="line" style="letter-spacing:0.1976em">conversations, to</span>
+          <span class="line" style="letter-spacing:0.1922em">major launches and</span>
+          <span class="line" style="letter-spacing:0.2063em">live events, LUDIC</span>
+          <span class="line" style="letter-spacing:0.1998em">brings strategy,</span>
+          <span class="line" style="letter-spacing:0.1997em">creativity and</span>
+          <span class="line" style="letter-spacing:0.1935em">execution together</span>
+          <span class="line" style="letter-spacing:0.1911em">to create moments</span>
+          <span class="line" style="letter-spacing:0.1944em">that matter.</span>
+        </p>
+        <p>
+          <span class="line" style="letter-spacing:0.2032em">From first idea to</span>
+          <span class="line" style="letter-spacing:0.2023em">final cue, we create</span>
+          <span class="line" style="letter-spacing:0.1939em">with purpose and</span>
+          <span class="line" style="letter-spacing:0.1913em">execute with</span>
+          <span class="line" style="letter-spacing:0.2023em">precision.</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Capabilities ============ -->
+  <section class="section capabilities" id="capabilities">
+    <div class="grid">
+      <h2 class="capabilities__heading body-xl nowrap trim" data-reveal="blur">Capabilities</h2>
+      <ol class="rows body-l">
+        <li class="row" data-reveal="rise"><span class="row__num trim">[01]</span><span class="row__text trim">Summit Strategy &amp; Content Curation</span></li>
+        <li class="row" data-reveal="rise"><span class="row__num trim">[02]</span><span class="row__text trim">VIP Protocol &amp; Stakeholder Liaison</span></li>
+        <li class="row" data-reveal="rise"><span class="row__num trim">[03]</span><span class="row__text trim">Immersive Production</span></li>
+        <li class="row" data-reveal="rise"><span class="row__num trim">[04]</span><span class="row__text trim">Delegate &amp; Guest Experience Design</span></li>
+        <li class="row" data-reveal="rise"><span class="row__num trim">[05]</span><span class="row__text trim">Media, PR &amp; Impact Reporting</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ Closing statement ============ -->
+  <section class="section closing">
+    <div class="grid">
+      <h2 class="closing__text display-l trim" data-reveal="lines-side" data-fill>
+        <span class="line closing__line1" style="letter-spacing:0.1913em">Creators that</span>
+        <span class="line closing__line2" style="letter-spacing:0.1898em">Speak your</span>
+        <span class="line closing__line3" style="letter-spacing:0.1786em">Language</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- ============ Contact ============ -->
+  <section class="section contact" id="contact">
+    <div class="grid">
+      <h2 class="contact__heading body-xl nowrap trim" data-reveal="blur">Get in touch</h2>
+      <form class="contact__form body-l" data-reveal="fade" action="#" onsubmit="return false">
+        <label class="row field">
+          <input class="field__input" type="text" name="name" placeholder=" " autocomplete="name">
+          <span class="field__label">Name</span>
+        </label>
+        <label class="row field">
+          <input class="field__input" type="email" name="email" placeholder=" " autocomplete="email">
+          <span class="field__label">Email</span>
+        </label>
+        <label class="row field field--multiline">
+          <textarea class="field__input" name="project" rows="3" placeholder=" "></textarea>
+          <span class="field__label">Project Description</span>
+        </label>
+        <button class="contact__submit" type="submit">Submit</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ Footer ============ -->
+  <footer class="section footer">
+    <div class="grid">
+      <a class="footer__logo" href="#top" aria-label="LUDIC Asia — back to top">
+        <svg width="255.47" height="20.61" viewBox="0 0 510.93 41.21" fill="var(--color-logo)">
+        <path d="M42.86 30.86L8.57 30.86L8.57 0.86L0.00 0.86L0.00 39.43L42.86 39.43L42.86 30.86"/>
+        <path d="M152.16 30.86L132.88 30.86L132.88 9.43L152.16 9.43C158.07 9.43 162.88 14.24 162.88 20.15C162.88 26.05 158.07 30.86 152.16 30.86M152.16 0.86L124.30 0.86L124.30 39.43L152.16 39.43C162.82 39.43 171.45 30.80 171.45 20.15C171.45 9.49 162.82 0.86 152.16 0.86"/>
+        <path d="M188.60 0.86H197.17V39.43H188.60Z"/>
+        <path d="M107.16 0.86L107.16 26.53C107.15 31.36 105.43 35.23 101.11 37.78C96.48 40.39 89.89 41.21 83.58 41.14C77.28 41.21 70.68 40.39 66.06 37.78C61.74 35.23 60.02 31.36 60.01 26.53L60.01 0.86L68.58 0.86L68.58 26.53C68.59 29.05 69.31 29.74 70.35 30.36C73.01 31.83 77.80 32.63 83.49 32.57L83.68 32.57C89.37 32.63 94.15 31.83 96.82 30.36C97.85 29.74 98.58 29.05 98.58 26.51L98.58 0.86L107.16 0.86"/>
+        <path d="M240.47 41.14C220.64 41.14 214.32 31.65 214.32 21.00C214.32 10.35 220.64 0.86 240.47 0.86C250.37 0.86 259.01 2.73 264.89 7.79L259.31 14.29C255.55 11.07 249.21 9.43 240.47 9.43C222.89 9.43 222.89 17.52 222.89 21.00C222.89 24.48 222.89 32.57 240.47 32.57C249.21 32.57 255.55 30.94 259.31 27.71L264.89 34.21C259.01 39.27 250.37 41.14 240.47 41.14"/>
+        <path d="M321.12 22.29L329.19 8.32L337.25 22.29L321.12 22.29M334.78 0.86L323.60 0.86L301.33 39.43L311.23 39.43L316.18 30.86L342.20 30.86L347.15 39.43L357.05 39.43L334.78 0.86"/>
+        <path d="M432.06 0.86H440.63V39.43H432.06Z"/>
+        <path d="M475.00 22.29L483.07 8.32L491.13 22.29L475.00 22.29M488.66 0.86L477.48 0.86L455.21 39.43L465.11 39.43L470.06 30.86L496.08 30.86L501.03 39.43L510.93 39.43L488.66 0.86"/>
+        <path d="M369.79 4.83C372.76 1.61 378.71 0.00 390.80 0.00C399.82 0.00 408.89 1.55 413.66 3.61L413.66 12.71C408.23 10.21 398.75 8.38 390.91 8.38C382.24 8.38 378.50 8.94 377.38 10.16C376.97 10.60 376.71 11.16 376.71 11.88C376.71 12.65 376.92 13.21 377.33 13.65C378.40 14.82 382.45 15.15 391.78 15.37C405.51 15.71 411.45 16.98 414.32 20.09C415.81 21.70 416.63 24.31 416.63 27.08C416.63 30.08 416.07 32.96 414.07 35.13C411.40 38.02 405.56 40.29 391.67 40.29C381.42 40.29 371.53 38.57 366.05 36.07L366.05 26.97C371.33 29.52 382.81 31.91 391.67 31.91C399.41 31.91 404.84 31.63 406.33 30.02C406.84 29.47 406.95 28.86 406.95 28.25C406.95 27.53 406.79 27.03 406.38 26.58C405.56 25.70 404.18 25.08 391.83 24.70C378.71 24.31 372.25 22.92 369.23 19.65C367.84 18.15 367.03 15.71 367.03 12.88C367.03 9.93 367.54 7.27 369.79 4.83"/>
+        </svg>
+      </a>
+      <p class="footer__legal body-s">All rights reserved etc</p>
+      <nav class="nav body-s" aria-label="Footer">
+        <a href="#work">Work</a>
+        <a href="#about">About</a>
+        <a href="#capabilities">Capabilities</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  /* Scroll reveals (see MOTION-BRIEF.md). Each [data-reveal] element plays once
+     when it enters the viewport; elements entering together cascade. */
+  (function () {
+    var root = document.documentElement;
+    if (!root.classList.contains("motion-ready")) return;
+
+    var targets = document.querySelectorAll("[data-reveal]");
+    targets.forEach(function (el) {
+      el.querySelectorAll(".line").forEach(function (line, i) {
+        line.style.setProperty("--i", i);
+        var fromRight = el.dataset.sides !== "left" && i % 2 === 1;
+        line.style.setProperty("--side", fromRight ? 1 : -1);
+        line.classList.toggle("from-right", fromRight);
+      });
+      if (el.dataset.revealDelay) el.style.setProperty("--delay", el.dataset.revealDelay + "ms");
+    });
+
+    var io = new IntersectionObserver(function (entries) {
+      var batch = entries
+        .filter(function (e) { return e.isIntersecting; })
+        .map(function (e) { return e.target; })
+        .sort(function (a, b) {
+          var ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+          return Math.round(ra.top - rb.top) || ra.left - rb.left;
+        });
+      batch.forEach(function (el, n) {
+        if (!el.dataset.revealDelay) var step = parseFloat(getComputedStyle(el).getPropertyValue("--stagger-rise")) || 100;
+        el.style.setProperty("--delay", Math.min(n, 5) * step + "ms"); // cascade, capped at 5 steps
+        el.classList.add("is-in");
+        io.unobserve(el);
+      });
+    }, { rootMargin: "0px 0px -15% 0px", threshold: 0 });
+
+    (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () {
+      targets.forEach(function (el) { io.observe(el); });
+    });
+  })();
+
+  /* Hero linework sheen: a band of light rests on the upper-left strokes from
+     load, and scrolling carries it across the shape (reverses on scroll up). */
+  (function () {
+    var svg = document.querySelector(".linework");
+    var grad = document.getElementById("lw-sheen");
+    if (!svg || !grad || !document.documentElement.classList.contains("motion-ready")) return;
+
+    var REST = -60, END = 2600; // band offset along the diagonal
+    var queued = false;
+
+    function render() {
+      queued = false;
+      var r = svg.getBoundingClientRect();
+      var p = Math.max(0, Math.min(1, -r.top / (r.height * 0.85)));
+      var o = REST + (END - REST) * p;
+      grad.setAttribute("gradientTransform", "translate(" + (o * 0.8).toFixed(1) + " " + (o * 0.6).toFixed(1) + ")");
+    }
+    function queue() { if (!queued) { queued = true; requestAnimationFrame(render); } }
+
+    window.addEventListener("scroll", queue, { passive: true });
+    window.addEventListener("resize", queue);
+    render();
+  })();
+
+  /* Scroll-linked colour fill for [data-fill] lines (see styles.css). */
+  (function () {
+    if (!document.documentElement.classList.contains("motion-ready")) return;
+    var lines = document.querySelectorAll("[data-fill]:not([data-fill='timed']) .line");
+    if (!lines.length) return;
+    var queued = false;
+
+    function update() {
+      queued = false;
+      var vh = window.innerHeight, start = vh * 0.75, end = vh * 0.45;
+      lines.forEach(function (line) {
+        var r = line.getBoundingClientRect();
+        var p = (start - (r.top + r.height / 2)) / (start - end);
+        line.style.setProperty("--p", Math.max(0, Math.min(1, p)).toFixed(3));
+      });
+    }
+    function queue() {
+      if (!queued) { queued = true; requestAnimationFrame(update); }
+    }
+
+    window.addEventListener("scroll", queue, { passive: true });
+    window.addEventListener("resize", queue);
+    update();
+  })();
+
+  /* Gallery on touch screens (no hover): the block crossing the middle of the
+     screen shows in colour with its title. */
+  (function () {
+    if (!window.matchMedia("(hover: none)").matches || !("IntersectionObserver" in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { e.target.classList.toggle("is-active", e.isIntersecting); });
+    }, { rootMargin: "-45% 0px -45% 0px" });
+    document.querySelectorAll(".gallery__item").forEach(function (el) { io.observe(el); });
+  })();
+
+  /* Company film: pressing play swaps the poster for the YouTube player, autoplaying. */
+  (function () {
+    var media = document.querySelector(".media");
+    var play = media && media.querySelector(".media__play");
+    if (!play) return;
+    var VIDEO_ID = "9edV64Y75zY";
+
+    play.addEventListener("click", function () {
+      var frame = document.createElement("iframe");
+      frame.className = "media__frame";
+      frame.src = "https://www.youtube-nocookie.com/embed/" + VIDEO_ID +
+        "?autoplay=1&rel=0&playsinline=1&modestbranding=1";
+      frame.title = "LUDIC company film";
+      frame.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+      frame.allowFullscreen = true;
+      frame.referrerPolicy = "strict-origin-when-cross-origin";
+      media.appendChild(frame);
+      media.classList.add("is-playing");
+    }, { once: true });
+  })();
+
+  /* Background video: load after the page, skip when motion or data should be saved,
+     pause while the tab is hidden. */
+  (function () {
+    var video = document.querySelector(".page-bg__video");
+    if (!video) return;
+    var conn = navigator.connection || {};
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var saveData = conn.saveData || /2g|3g/.test(conn.effectiveType || "");
+    if (reduceMotion || saveData) return; // the still stays in place
+
+    function start() {
+      video.querySelectorAll("source[data-src]").forEach(function (s) {
+        s.src = s.dataset.src;
+      });
+      video.load();
+      video.addEventListener("playing", function () {
+        video.classList.add("is-playing");
+      }, { once: true });
+      video.play().catch(function () {});
+    }
+
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start, { once: true });
+
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) video.pause();
+      else if (video.currentSrc) video.play().catch(function () {});
+    });
+  })();
+
+  /* NOT FROM THE DESIGN — provisional: scale the fixed 1920px canvas to fit
+     narrower viewports so the layout never breaks. Remove when a responsive
+     design exists. */
+  (function () {
+    var page = document.querySelector(".page");
+    function fit() {
+      var w = document.documentElement.clientWidth;
+      var s = w < 1920 ? w / 1920 : 1;
+      page.style.zoom = s === 1 ? "" : s;
+      document.documentElement.classList.toggle("is-scaled", s !== 1);
+    }
+    fit();
+    window.addEventListener("resize", fit);
+  })();
+</script>
+</body>
+</html>

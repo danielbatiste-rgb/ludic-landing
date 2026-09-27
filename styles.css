@@ -1,0 +1,1058 @@
+/* ==========================================================================
+   LUDIC Landing Page — structural wireframe
+   Geometry is taken from "LUDIC Landing Page [placeholder] .pdf" (1920 × 8703.78).
+   Vertical offsets are written as page-y minus section-top so they can be
+   traced back to the artwork.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Idlewild Book";
+  src: url("fonts/Idlewild-Book.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Helvetica Neue Light";
+  src: url("fonts/HelveticaNeueLTW0545Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: block;
+}
+
+:root {
+  --desktop-width: 1920px;
+  --page-margin: 60px;
+  --content-width: 1800px;
+
+  --grid-columns: 12;
+  --grid-column-width: 128px;
+  --grid-gutter: 24px;
+
+  --gallery-column-width: 584px;
+  --gallery-gap: 24px;
+  --gallery-row-gap: 20px; /* measured from PDF: blocks stack 20px apart vertically */
+
+  --gallery-height-small: 230px;
+  --gallery-height-medium: 430px;
+  --gallery-height-large: 584px;
+
+  --header-height: 100px;
+
+  --radius-gallery: 10px;
+  --radius-media: 35px;
+
+  --space-section: 300px; /* between sections */
+  --space-block: 120px;   /* heading → its content inside a section */
+
+  --cap-height: 0.714;          /* Helvetica Neue Light cap height, em */
+  --row-space-top: 66.6px;      /* rule → next row's cap top */
+  --row-space-bottom: 52.9px;   /* baseline → rule (+ rule = 137.85px row pitch) */
+  --field-trim-top: -6.56px;    /* 30px line box top → cap top at 25px */
+  --field-trim-bottom: -5.59px; /* baseline → 30px line box bottom at 25px */
+
+  --font-display: "Idlewild Book", sans-serif;
+  --font-body: "Helvetica Neue Light", "HelveticaNeue-Light", sans-serif;
+
+  /* Sampled from PDF fills/strokes */
+  --color-background: #040c1a;
+  --color-accent: #7485e7;
+  --color-text: #ffffff;
+  --color-rule: #ffffff;
+  --color-logo: #f6f2fc;
+  --color-linework: #d2bff2;
+  --color-text-muted: rgb(255 255 255 / 0.5);  /* form labels at rest */
+  --color-rule-muted: rgb(255 255 255 / 0.4);  /* form rules at rest; full white on focus */
+
+  --grain-opacity: 0.18; /* film grain strength over the background (0 = off) */
+
+  --color-button-hover: rgb(255 255 255 / 0.12); /* translucent Submit hover fill */
+
+  /* Editorial statement scroll-fill: starts dim/low-contrast, fills to a lighter periwinkle */
+  --color-accent-dim: color-mix(in srgb, var(--color-accent) 50%, var(--color-background));
+  --color-accent-bright: color-mix(in srgb, var(--color-accent) 35%, #ffffff);
+  --ease-button: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-gallery: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --gallery-mono: 0; /* strength of the silvery-blue treatment at rest (0 = full colour; was 1, tried 0.45) */
+
+  --rule-width: 0.75px;
+}
+
+/* ---------- Reset ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; } /* nav links glide to their section */
+}
+
+/* Nav targets: land with the section heading ~120px below the top of the screen
+   (sections carry 300px of top padding, so pull the stop point down into it). */
+#about,
+#capabilities,
+#contact {
+  scroll-margin-top: calc(120px - var(--space-section));
+}
+
+#work {
+  scroll-margin-top: 120px;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 22px;
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-kerning: normal;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+button,
+input,
+textarea {
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  outline: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+h1,
+h2,
+h3,
+p {
+  font: inherit;
+}
+
+svg {
+  display: block;
+}
+
+/* ---------- Canvas + grid ---------- */
+
+.page {
+  position: relative;
+  width: var(--desktop-width);
+  margin: 0 auto;
+  overflow: hidden;
+  background: var(--color-background);
+}
+
+.section {
+  position: relative;
+  z-index: 1;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), var(--grid-column-width));
+  column-gap: var(--grid-gutter);
+  align-items: start;
+  width: var(--content-width);
+  margin-left: var(--page-margin);
+  margin-right: var(--page-margin);
+}
+
+.grid > * {
+  grid-row: 1;
+}
+
+/* ---------- Type styles (sizes/leading from PDF) ---------- */
+
+.display-xl {
+  /* Idlewild Book 119.85px — "Design", "More than / An event" */
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 119.85px;
+  line-height: 141px;
+  letter-spacing: 0.1846em; /* per-line tracking in index.html, fitted to PDF glyph extents */
+}
+
+.display-l {
+  /* Idlewild Book 66.82px — closing statement */
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 66.82px;
+  line-height: 99.25px;
+  letter-spacing: 0.19em; /* per-line tracking in index.html */
+}
+
+.display-s {
+  /* Idlewild Book 39.72px — "Impact by", editorial statement */
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 39.72px;
+  line-height: 60px;
+  letter-spacing: 0.195em; /* per-line tracking in index.html */
+}
+
+.display-xl,
+.display-l,
+.display-s {
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+.line {
+  display: block;
+}
+
+.body-xl {
+  /* Helvetica Neue Light 40px (was 55px in PDF; baselines kept at PDF positions) */
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 40px;
+  line-height: 49px;
+  letter-spacing: 0;
+}
+
+.body-l {
+  /* Helvetica Neue Light 25px (was 35px in PDF; baselines kept at PDF positions) */
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 25px;
+  line-height: 30px;
+  letter-spacing: 0;
+}
+
+.body-m {
+  /* Helvetica Neue Light 25px */
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 25px;
+  line-height: 38px;
+  letter-spacing: 0;
+}
+
+.body-s {
+  /* Helvetica Neue Light 18px */
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 22px;
+  letter-spacing: 0;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+/* ---------- Nav (shared by header + footer) ---------- */
+
+.nav {
+  display: flex;
+  justify-content: flex-end;
+  column-gap: 45px;
+  white-space: nowrap;
+}
+
+/* ---------- Header ---------- */
+
+.header {
+  height: var(--header-height);
+}
+
+.header__logo {
+  grid-column: 1 / 3;
+  margin-top: 26.18px;
+  margin-left: 7.17px;
+  width: 113.65px;
+  height: 47.66px;
+}
+
+.header .nav {
+  grid-column: 7 / 13;
+  margin-top: 37px;
+}
+
+/* ---------- Page background video ---------- */
+
+.page-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  /* First frame of the video: shows instantly, and stays for visitors who don't get the video */
+  background: url("assets/background-poster.jpg") 0 0 / 100% 100% no-repeat;
+}
+
+@media (max-width: 1024px) {
+  .page-bg {
+    background-image: url("assets/background-poster-mobile.jpg");
+  }
+}
+
+.page-bg__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill; /* stretched to the full page height, as requested */
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.page-bg__video.is-playing {
+  opacity: 1; /* fade in over the matching still, so there's no flash */
+}
+
+/* Film grain over the background only (sits under all content).
+   Fixed to the viewport so it's one screen-sized layer, jittered a few
+   times a second like real grain. */
+.page-bg__grain {
+  position: fixed;
+  inset: -100px;
+  background: url("assets/grain.png") repeat;
+  background-size: 256px 256px;
+  mix-blend-mode: overlay;
+  opacity: var(--grain-opacity);
+  animation: grain 0.8s steps(1) infinite;
+}
+
+@keyframes grain {
+  0%   { transform: translate(0, 0); }
+  12%  { transform: translate(-37px, 21px); }
+  25%  { transform: translate(53px, -44px); }
+  37%  { transform: translate(-18px, 67px); }
+  50%  { transform: translate(71px, 12px); }
+  62%  { transform: translate(-62px, -29px); }
+  75%  { transform: translate(24px, 48px); }
+  87%  { transform: translate(-45px, -71px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-bg__grain { animation: none; }
+}
+
+/* ---------- Hero ---------- */
+
+.linework {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Linework sheen — only when motion runs; otherwise the outline shows as designed. */
+.linework__sheen {
+  display: none;
+}
+
+.motion-ready .linework__sheen {
+  display: inline;
+}
+
+.motion-ready .linework__base {
+  opacity: 0.1; /* dormant outline: very subtle, always on */
+}
+
+.linework__glow { opacity: 0.12; }
+.linework__halo { opacity: 0.3; }
+.linework__core { opacity: 0.95; }
+
+.hero {
+  height: 1050px; /* page y 100 → 1150 */
+}
+
+.hero__headline {
+  grid-column: 1 / 8;
+  margin-top: 104.9px;
+}
+
+.hero__kicker {
+  display: block;
+  margin-left: 4.5px;
+  line-height: 39.72px;
+}
+
+.hero__title {
+  display: block;
+  margin-top: 20.1px;
+  margin-left: -4.5px;
+  line-height: 119.85px;
+}
+
+.hero__sub {
+  grid-column: 8 / 12;
+  justify-self: end; /* longest line ends on the right edge of column 11 (x 1708) */
+  margin-top: 474.2px;
+}
+
+/* ---------- Vertical rhythm ----------
+   From the gallery down, sections are spaced by two tokens instead of fixed
+   heights. Gaps are measured optically: text boxes are trimmed to cap height
+   and baseline (text-box-trim), so 240px means 240px from the last visible
+   baseline / edge of one section to the first cap top / edge of the next. */
+
+.trim {
+  text-box: trim-both cap alphabetic;
+}
+
+/* ---------- Trusted by ---------- */
+
+.trusted {
+  z-index: auto; /* no stacking context, so the logo strip can blend with the page (and linework) behind it */
+  /* heading baseline (102.2) → logos (+ block space) → gallery (+ section space) */
+  --logos-top: calc(102.2px + var(--space-block) - 43px); /* 43px: first logo row sits 43px into the strip */
+  height: calc(var(--logos-top) + 390.8px + var(--space-section)); /* 390.8px: strip top → lowest logo edge */
+}
+
+.trusted__heading {
+  grid-column: 1 / 5;
+  margin-top: 62.4px;
+  margin-left: 11.5px;
+}
+
+.logo-grid {
+  /* Footprint of the logo strip in the PDF: 1820.8 × 441.8 at x 57.2 */
+  position: absolute;
+  top: var(--logos-top);
+  left: 57.2px;
+  width: 1820.8px;
+  height: 441.8px;
+  display: block;
+  mix-blend-mode: screen; /* drops the strip's black background into the page, like Figma's Screen blend */
+}
+
+/* ---------- Gallery ---------- */
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, var(--gallery-column-width));
+  column-gap: var(--gallery-gap);
+  align-items: start;
+  width: var(--content-width);
+  margin-left: var(--page-margin);
+}
+
+.gallery__column {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--gallery-row-gap);
+}
+
+.gallery__item {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: var(--gallery-column-width);
+  border-radius: var(--radius-gallery);
+  background: color-mix(in srgb, var(--color-accent) 18%, var(--color-background)); /* while loading */
+}
+
+.gallery__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition:
+    opacity 900ms var(--ease-gallery),
+    transform 1600ms var(--ease-gallery);
+}
+
+/* Silvery-blue mono version sits on top of the colour image. Its opacity sets
+   the strength of the treatment at rest (1 = full B&W, 0 = plain colour);
+   hover fades it away completely. */
+.gallery__img--mono {
+  z-index: 1;
+  opacity: var(--gallery-mono);
+}
+
+/* Soft dark wash so the title reads over busy colour images */
+.gallery__item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: rgb(4 12 26 / 0.35);
+  opacity: 0;
+  transition: opacity 900ms var(--ease-gallery);
+}
+
+.gallery__title {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  padding: 0 40px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 28px;
+  line-height: 38px;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: var(--color-text);
+  opacity: 0;
+  filter: blur(6px);
+  transform: translateY(10px);
+  transition:
+    opacity 700ms var(--ease-gallery),
+    filter 700ms var(--ease-gallery),
+    transform 700ms var(--ease-gallery);
+}
+
+@media (hover: hover) {
+  .gallery__item:hover .gallery__img--mono { opacity: 0; }
+  .gallery__item:hover .gallery__img { transform: scale(1.04); }
+  .gallery__item:hover::after { opacity: 1; }
+  .gallery__item:hover .gallery__title {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    transition-delay: 120ms;
+  }
+}
+
+.gallery__item.is-active .gallery__img--mono { opacity: 0; }
+.gallery__item.is-active .gallery__img { transform: scale(1.04); }
+.gallery__item.is-active::after { opacity: 1; }
+.gallery__item.is-active .gallery__title {
+  opacity: 1;
+  filter: none;
+  transform: none;
+  transition-delay: 120ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery__img { transition: opacity 400ms linear; transform: none !important; }
+  .gallery__title { filter: none; transform: none !important; }
+}
+
+.gallery__item--s { height: var(--gallery-height-small); }
+.gallery__item--m { height: var(--gallery-height-medium); }
+.gallery__item--l { height: var(--gallery-height-large); }
+
+/* ---------- Section spacing ---------- */
+
+.statement,
+.editorial,
+.capabilities,
+.closing,
+.contact,
+.footer {
+  padding-top: var(--space-section);
+}
+
+/* ---------- More than an event ---------- */
+
+.statement__text {
+  grid-column: 1 / 13;
+}
+
+.statement__line1 { margin-left: 9.8px; }
+.statement__line2 { margin-left: 608px; } /* starts on grid column 5 (x 668) */
+
+/* ---------- Media ---------- */
+
+.media {
+  position: relative;
+  width: var(--content-width);
+  height: 1012.5px;
+  margin-top: var(--space-section);
+  margin-left: var(--page-margin);
+  border-radius: var(--radius-media);
+  background: var(--color-accent);
+}
+
+.media {
+  overflow: hidden; /* clips the film to the 35px corners */
+}
+
+.media__poster,
+.media__frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.media__poster {
+  object-fit: cover;
+}
+
+.media__frame {
+  z-index: 2;
+  background: var(--color-background);
+}
+
+/* The whole block is the play button; the icon stays at its PDF position */
+.media__play {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  transition: opacity 0.5s var(--ease-button);
+}
+
+.media__icon {
+  position: absolute;
+  inset: 0;
+  transform-origin: 900px 467.7px; /* circle centre, in the block */
+  transform: scale(0.7); /* play button at 70% of the PDF size (273 → 191px) */
+  transition: transform 0.6s var(--ease-button);
+}
+
+.media__play:hover .media__icon,
+.media__play:focus-visible .media__icon {
+  transform: scale(0.75);
+}
+
+.media__play:focus-visible {
+  outline: none;
+}
+
+.media__play:focus-visible .media__icon circle {
+  stroke-width: 6;
+}
+
+.media.is-playing .media__play {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---------- Editorial ---------- */
+
+.editorial__intro {
+  grid-column: 1 / 5;
+  margin-left: 1.7px;
+  white-space: nowrap;
+}
+
+.editorial__statement {
+  grid-column: 6 / 13;
+}
+
+.editorial__statement p + p {
+  margin-top: 60px;
+}
+
+/* ---------- Rows (capabilities + form) ---------- */
+
+.rows {
+  grid-column: 6 / 13;
+  /* 40px headings have a taller cap than the 25px rows; this drops the list so
+     both share a baseline, while the heading's cap top sets the section gap */
+  margin-top: calc(var(--cap-height) * (40px - 25px));
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 306.5px auto; /* text column at x 1126.5, as in PDF */
+  padding-top: var(--row-space-top);
+  padding-bottom: var(--row-space-bottom);
+  border-bottom: var(--rule-width) solid var(--color-rule);
+  white-space: nowrap;
+}
+
+.row:first-child {
+  padding-top: 0;
+}
+
+/* ---------- Capabilities ---------- */
+
+.capabilities__heading {
+  grid-column: 1 / 5;
+}
+
+/* ---------- Closing statement ---------- */
+
+.closing__text {
+  grid-column: 1 / 13;
+}
+
+.closing__line1,
+.closing__line3 { margin-left: 4.5px; }
+.closing__line2 { margin-left: 479px; }
+
+/* ---------- Contact ---------- */
+
+.contact__heading {
+  grid-column: 1 / 5;
+}
+
+.contact__form {
+  grid-column: 6 / 13;
+  /* Every field row keeps its top padding (room for the floated label), so pull
+     the form up by that amount; the first field then shares the heading's baseline. */
+  margin-top: calc(var(--cap-height) * (40px - 25px) - var(--row-space-top));
+}
+
+.field {
+  position: relative;
+  display: flow-root; /* stops the input's trim margins collapsing out of the row */
+  border-bottom-color: var(--color-rule-muted);
+  transition: border-color 0.2s ease;
+}
+
+.contact__form .row:first-child {
+  padding-top: var(--row-space-top);
+}
+
+.field:focus-within {
+  border-bottom-color: var(--color-rule);
+}
+
+.field__input {
+  display: block;
+  width: 100%;
+  height: 30px;
+  /* inputs can't be text-box-trimmed, so trim their 30px line box to cap/baseline by hand */
+  margin-top: var(--field-trim-top);
+  margin-bottom: var(--field-trim-bottom);
+  padding: 0;
+  resize: none;
+  overflow: hidden;
+  white-space: nowrap;
+  caret-color: var(--color-text);
+}
+
+.field--multiline .field__input {
+  height: 90px; /* 3 lines */
+  white-space: pre-wrap;
+  overflow-y: auto;
+}
+
+.field__input::placeholder {
+  color: transparent; /* the label does the placeholder's job */
+}
+
+/* Label sits in the field like a placeholder, then floats above the line
+   (at 18px) once the field is focused or has content, so it never disappears. */
+.field__label {
+  position: absolute;
+  left: 0;
+  top: var(--row-space-top);
+  height: 30px;
+  margin-top: var(--field-trim-top);
+  line-height: 30px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  pointer-events: none;
+  transform-origin: left top;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.field__input:focus + .field__label,
+.field__input:not(:placeholder-shown) + .field__label {
+  transform: translateY(-40px) scale(0.72); /* 25px → 18px */
+}
+
+.field__input:focus + .field__label {
+  color: var(--color-text);
+}
+
+.contact__submit {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: block;
+  width: 303.3px;
+  height: 80px;
+  margin-top: 56.6px; /* last rule → pill, as in PDF */
+  margin-left: auto;
+  /* Soft glass pill: faint frosted fill, translucent edge, light catch along the top */
+  border: 1px solid rgb(255 255 255 / 0.28);
+  border-radius: 40px;
+  background: rgb(255 255 255 / 0.04);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  backdrop-filter: blur(14px) saturate(1.4);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.14);
+  text-align: center;
+  line-height: 30px;
+  padding-top: 3.8px; /* optically centres the 25px label's cap height in the pill */
+  cursor: pointer;
+  transition:
+    background-color 0.7s var(--ease-button),
+    border-color 0.7s var(--ease-button),
+    box-shadow 0.9s var(--ease-button),
+    transform 0.6s var(--ease-button);
+}
+
+/* Hover: the translucent fill fades in, the edge brightens and a soft
+   periwinkle glow blooms around the pill */
+.contact__submit:hover,
+.contact__submit:focus-visible {
+  background-color: var(--color-button-hover);
+  border-color: rgb(255 255 255 / 0.6);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.28),
+    0 0 36px -6px color-mix(in srgb, var(--color-accent-bright) 55%, transparent);
+}
+
+/* …and a single soft sheen sweeps across, like the light over the hero outline.
+   It only animates on the way in; on leave it resets out of sight. */
+.contact__submit::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(105deg,
+    transparent 30%,
+    rgb(255 255 255 / 0.22) 50%,
+    transparent 70%);
+  transform: translateX(-110%);
+}
+
+.contact__submit:hover::before,
+.contact__submit:focus-visible::before {
+  transform: translateX(110%);
+  transition: transform 1.2s var(--ease-button);
+}
+
+.contact__submit:focus-visible {
+  outline: 1px solid rgb(255 255 255 / 0.6);
+  outline-offset: 5px;
+}
+
+.contact__submit:active {
+  transform: scale(0.98);
+  transition-duration: 0.15s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact__submit::before { display: none; }
+}
+
+/* ---------- Footer ---------- */
+
+.footer {
+  padding-bottom: var(--space-block);
+}
+
+.footer__logo {
+  grid-column: 1 / 5;
+  margin-left: 14.4px;
+  width: 255.47px;  /* half the PDF size (510.93 × 41.21) */
+  height: 20.61px;
+}
+
+.footer__legal,
+.footer .nav {
+  margin-top: 1.94px; /* nav baseline sits on the logo's letter baseline */
+}
+
+.footer__legal {
+  grid-column: 6 / 9;
+  margin-left: 140.5px; /* x 960.5 in PDF */
+  white-space: nowrap;
+}
+
+.footer .nav {
+  grid-column: 9 / 13;
+}
+
+/* ---------- Motion (see MOTION-BRIEF.md) ----------
+   Hidden start states only apply under html.motion-ready, which is set in
+   <head> when JS + IntersectionObserver exist and reduced motion is off.
+   Without it, everything renders static and visible. */
+
+:root {
+  --ease-out-soft: cubic-bezier(0.33, 1, 0.68, 1);  /* ≈ easeOutCubic */
+  --ease-out-strong: cubic-bezier(0.25, 1, 0.5, 1); /* ≈ easeOutQuart */
+
+  --dur-heading: 800ms;
+  --dur-rise: 800ms;
+  --dur-line: 600ms;
+  --dur-display: 1000ms;
+
+  --stagger-line: 80ms;
+  --stagger-display: 140ms;
+  --stagger-rise: 100ms; /* cascade between blocks entering together (read by the script) */
+
+  --rise-distance: 80px;
+  --fade-distance: 40px;
+  --slide-distance: 0.5em; /* Idlewild lines: ~60px at 120px type, ~20px at 40px */
+  --display-blur: 0.12em;
+}
+
+/* Top half of the page (hero → video): slower, softer, smoother.
+   Everything from the editorial section down keeps the base timings above. */
+.hero,
+.trusted,
+.gallery,
+.statement,
+.media {
+  --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);   /* gentle ease-out, no snap */
+  --ease-out-strong: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  --dur-heading: 1300ms;
+  --dur-rise: 1400ms;
+  --dur-line: 1100ms;
+  --dur-display: 1700ms;
+
+  --stagger-line: 140ms;
+  --stagger-display: 240ms;
+  --stagger-rise: 180ms;
+
+  --rise-distance: 60px;
+  --fade-distance: 30px;
+}
+
+/* Block blur-in — 40px headings */
+.motion-ready [data-reveal="blur"] {
+  opacity: 0;
+  filter: blur(10px);
+  transform: translateY(10px);
+  transition:
+    opacity var(--dur-heading) var(--ease-out-soft),
+    filter var(--dur-heading) var(--ease-out-soft),
+    transform var(--dur-heading) var(--ease-out-soft);
+  transition-delay: var(--delay, 0ms);
+}
+
+/* Block rise — capability rows, gallery blocks, video */
+.motion-ready [data-reveal="rise"] {
+  opacity: 0;
+  transform: translateY(var(--rise-distance));
+  transition:
+    opacity var(--dur-rise) var(--ease-out-strong),
+    transform var(--dur-rise) var(--ease-out-strong);
+  transition-delay: var(--delay, 0ms);
+}
+
+/* Gentle block fade-up — logo strip, contact form */
+.motion-ready [data-reveal="fade"] {
+  opacity: 0;
+  transform: translateY(var(--fade-distance));
+  transition:
+    opacity var(--dur-rise) var(--ease-out-soft),
+    transform var(--dur-rise) var(--ease-out-soft);
+  transition-delay: var(--delay, 0ms);
+}
+
+/* Line-by-line fade-up — Helvetica copy */
+.motion-ready [data-reveal="lines"] .line {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity var(--dur-line) var(--ease-out-strong),
+    transform var(--dur-line) var(--ease-out-strong);
+  transition-delay: calc(var(--delay, 0ms) + var(--i, 0) * var(--stagger-line));
+}
+
+/* Line-by-line blur-in from the sides — Idlewild statements.
+   --side is −1 (from left) or 1 (from right), set per line by the script. */
+.motion-ready [data-reveal="lines-side"] .line {
+  opacity: 0;
+  filter: blur(var(--display-blur));
+  transform: translateX(calc(var(--side, -1) * var(--slide-distance)));
+  transition:
+    opacity var(--dur-display) var(--ease-out-soft),
+    filter var(--dur-display) var(--ease-out-soft),
+    transform var(--dur-display) var(--ease-out-strong);
+  transition-delay: calc(var(--delay, 0ms) + var(--i, 0) * var(--stagger-display));
+}
+
+.motion-ready [data-reveal="lines-side"][data-sides="left"] .line {
+  transition-delay: calc(var(--delay, 0ms) + var(--i, 0) * var(--stagger-line));
+}
+
+.motion-ready [data-reveal].is-in,
+.motion-ready [data-reveal].is-in .line {
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+@property --p {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+/* Editorial lines are smaller type, so give them the same visible travel and
+   blur as the big titles (~60px) — otherwise the dim entrance goes unnoticed. */
+.editorial__statement {
+  --slide-distance: 1.5em;
+  --display-blur: 0.2em;
+}
+
+/* Scroll-linked colour fill — editorial statement and Idlewild titles.
+   Each line washes from dim to bright, left to right, as it passes from 75% to
+   45% of the viewport height (--p 0 → 1, set by the script). The entrance
+   motion above is unchanged. Static fallback: the bright colour. */
+[data-fill] {
+  color: var(--color-accent-bright);
+}
+
+.motion-ready [data-fill] .line {
+  width: fit-content;
+  color: transparent;
+  background-image: linear-gradient(90deg,
+    var(--color-accent-bright) 0 45%,
+    var(--color-accent-dim) 55% 100%);
+  background-size: 220% 100%;
+  background-position: calc((1 - var(--p, 0)) * 100%) 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Lines that slide in from the right fill mirrored: right → left */
+.motion-ready [data-fill] .line.from-right {
+  background-image: linear-gradient(270deg,
+    var(--color-accent-bright) 0 45%,
+    var(--color-accent-dim) 55% 100%);
+  background-position: calc(var(--p, 0) * 100%) 0;
+}
+
+/* Hero: too high on the page to fill on scroll, so it fills once, timed to
+   start as each line finishes sliding in. */
+.motion-ready [data-fill="timed"] .line {
+  transition:
+    opacity var(--dur-display) var(--ease-out-soft),
+    filter var(--dur-display) var(--ease-out-soft),
+    transform var(--dur-display) var(--ease-out-strong),
+    --p 1600ms var(--ease-out-soft);
+  transition-delay:
+    calc(var(--delay, 0ms) + var(--i, 0) * var(--stagger-display)),
+    calc(var(--delay, 0ms) + var(--i, 0) * var(--stagger-display)),
+    calc(var(--delay, 0ms) + var(--i, 0) * var(--stagger-display)),
+    calc(var(--delay, 0ms) + var(--i, 0) * var(--stagger-display) + 1000ms);
+}
+
+.motion-ready [data-fill="timed"].is-in .line {
+  --p: 1;
+}
+
+/* ==========================================================================
+   NOT FROM THE DESIGN — provisional small-viewport behaviour.
+   The artwork only defines the 1920px desktop. Below 1920px the fixed canvas
+   is scaled down to fit (see script in index.html) so the layout does not
+   break. Replace once a responsive design exists.
+   ========================================================================== */
+html.is-scaled body {
+  overflow-x: hidden;
+}
