@@ -77,6 +77,14 @@
   --gallery-mono: 0; /* strength of the silvery-blue treatment at rest (0 = full colour; was 1, tried 0.45) */
 
   --rule-width: 0.75px;
+
+  /* Hero film */
+  --hero-height: clamp(800px, var(--screen-h, 1080px), 1440px); /* --screen-h: screen height in canvas px, set by the script */
+  --hero-overlay: rgb(4 12 26 / 0.6);  /* dark overlay while the title animates in (navy at 60%) */
+  --hero-reveal-duration: 1.6s;        /* overlay + hero text fade once the title has come in */
+  --film-crop: 1.1;                    /* hero film scaled up 10% to crop YouTube's edge interface */
+  --ease-hero-reveal: cubic-bezier(0.45, 0, 0.25, 1); /* slow, soft in and out */
+  --space-after-hero: 130px;           /* extra room between the film's bottom edge and "Trusted by" */
 }
 
 /* ---------- Reset ---------- */
@@ -199,11 +207,12 @@ svg {
 }
 
 .display-l {
-  /* Idlewild Book 66.82px — closing statement */
+  /* Idlewild Book 52px — "More than / An event" and the closing statement
+     (was 66.82px, then 59px; set by the user, same 1.485 leading ratio) */
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 66.82px;
-  line-height: 99.25px;
+  font-size: 52px;
+  line-height: 77.24px;
   letter-spacing: 0.19em; /* per-line tracking in index.html */
 }
 
@@ -276,6 +285,41 @@ svg {
   white-space: nowrap;
 }
 
+/* Social icons (header + footer) */
+.social {
+  display: flex;
+  align-items: center;
+  column-gap: 20px;
+}
+
+.social a {
+  display: block;
+  color: var(--color-text);
+  opacity: 0.85;
+  transition: opacity 0.4s var(--ease-button);
+}
+
+.social a:hover,
+.social a:focus-visible {
+  opacity: 1;
+}
+
+.social svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nav .social {
+  margin-left: 15px; /* 45px nav gap + 15px = 60px between "Contact" and the icons */
+}
+
+.icon-sprite {
+  position: absolute;
+}
+
 /* ---------- Header ---------- */
 
 .header {
@@ -292,6 +336,7 @@ svg {
 
 .header .nav {
   grid-column: 7 / 13;
+  align-items: center;
   margin-top: 37px;
 }
 
@@ -381,8 +426,78 @@ svg {
 .linework__halo { opacity: 0.3; }
 .linework__core { opacity: 0.95; }
 
+/* Hero film — full screen height (in canvas px, so it still fills the screen when
+   the page is scaled down), behind the header and hero. */
+.hero-media {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1; /* above the page background, below the header and hero (later in the page) */
+  width: 100%;
+  height: var(--hero-height);
+  overflow: hidden;
+  background: var(--color-background);
+  pointer-events: none;
+}
+
+.hero-media__poster,
+.hero-media__frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-media__poster {
+  object-fit: cover;
+  opacity: 0;
+}
+
+.hero-media.is-still .hero-media__poster {
+  opacity: 1; /* no autoplay: show the thumbnail instead */
+}
+
+/* The YouTube player, sized to cover the hero like object-fit: cover, and scaled up
+   a little (--film-crop) so YouTube's own title bar and logo at its edges are cropped
+   off. It appears as soon as the film first plays. */
+.hero-media__frame {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.hero-media.is-playing .hero-media__frame {
+  opacity: 1;
+}
+
+.hero-media__frame iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, calc(var(--hero-height) * 16 / 9));
+  height: auto;
+  aspect-ratio: 16 / 9;
+  transform: translate(-50%, -50%) scale(var(--film-crop));
+  border: 0;
+}
+
+.hero-media__overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--hero-overlay);
+  transition: opacity var(--hero-reveal-duration) var(--ease-hero-reveal);
+}
+
+.hero-media.is-revealed .hero-media__overlay {
+  opacity: 0;
+}
+
 .hero {
-  height: 1050px; /* page y 100 → 1150 */
+  height: calc(var(--hero-height) - var(--header-height));
+}
+
+.hero .grid {
+  height: 100%;
+  grid-template-rows: 100%;
 }
 
 .hero__headline {
@@ -404,10 +519,80 @@ svg {
 }
 
 .hero__sub {
-  grid-column: 8 / 12;
-  justify-self: end; /* longest line ends on the right edge of column 11 (x 1708) */
-  margin-top: 474.2px;
+  grid-column: 8 / 13;
+  align-self: end;
+  margin-left: 76px;     /* x 1200, from "LUDIC Landing Hero [01] .pdf" */
+  margin-bottom: 94px;   /* last baseline 94px above the bottom of the screen */
 }
+
+/* The title and supporting text fade out with the overlay on the reveal */
+.hero__headline,
+.hero__sub {
+  transition: opacity var(--hero-reveal-duration) var(--ease-hero-reveal);
+}
+
+.hero.is-revealed .hero__headline,
+.hero.is-revealed .hero__sub,
+.motion-ready .hero.is-revealed [data-reveal].is-in {
+  opacity: 0; /* beats the reveal's "is-in" opacity */
+}
+
+/* Film controls (hero + film section) — pause/play and sound, bottom left, level
+   with the hero text's last baseline */
+.film-controls {
+  grid-column: 1 / 4;
+  align-self: end;
+  display: flex;
+  column-gap: 12px;
+  margin-left: 10px;     /* lines up with the left edge of "Design" */
+  margin-bottom: 94px;
+  opacity: 0;
+  transition: opacity 1.2s var(--ease-button);
+}
+
+.film-controls.is-in {
+  opacity: 1; /* appear once the title animation has finished */
+}
+
+.film-controls__btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: var(--rule-width) solid rgb(255 255 255 / 0.45);
+  background: rgb(255 255 255 / 0.06);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color 0.4s var(--ease-button), border-color 0.4s var(--ease-button);
+}
+
+.film-controls__btn:hover,
+.film-controls__btn:focus-visible {
+  background: var(--color-button-hover);
+  border-color: var(--color-text);
+}
+
+.film-controls__btn svg {
+  grid-area: 1 / 1;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.film-controls__pause .icon-play { fill: currentColor; stroke: none; }
+.film-controls__pause .icon-play,
+.film-controls__pause.is-paused .icon-pause { display: none; }
+.film-controls__pause.is-paused .icon-play { display: block; }
+
+.film-controls__sound svg > path:first-child { fill: currentColor; stroke: none; }
+.film-controls__sound .icon-sound-on,
+.film-controls__sound[aria-pressed="true"] .icon-sound-off { display: none; }
+.film-controls__sound[aria-pressed="true"] .icon-sound-on { display: inline; }
 
 /* ---------- Vertical rhythm ----------
    From the gallery down, sections are spaced by two tokens instead of fixed
@@ -422,6 +607,7 @@ svg {
 /* ---------- Trusted by ---------- */
 
 .trusted {
+  margin-top: var(--space-after-hero);
   z-index: auto; /* no stacking context, so the logo strip can blend with the page (and linework) behind it */
   /* heading baseline (102.2) → logos (+ block space) → gallery (+ section space) */
   --logos-top: calc(102.2px + var(--space-block) - 43px); /* 43px: first logo row sits 43px into the strip */
@@ -557,7 +743,6 @@ svg {
 
 /* ---------- Section spacing ---------- */
 
-.statement,
 .editorial,
 .capabilities,
 .closing,
@@ -566,33 +751,73 @@ svg {
   padding-top: var(--space-section);
 }
 
-/* ---------- More than an event ---------- */
+/* ---------- About ("LUDIC Video Section [02] .pdf") ---------- */
 
-.statement__text {
-  grid-column: 1 / 13;
+.about {
+  z-index: auto; /* no stacking context: the spark sits under the gallery above and the film below */
+  height: calc(var(--about-top) + 1000px); /* intro cap top → film top: 1000px, as in the PDF */
+  padding-top: var(--about-top);
+  --about-top: 226px; /* gallery bottom → intro cap top, as in the PDF */
 }
 
-.statement__line1 { margin-left: 9.8px; }
-.statement__line2 { margin-left: 608px; } /* starts on grid column 5 (x 668) */
-
-/* ---------- Media ---------- */
-
-.media {
+.about .grid {
   position: relative;
-  width: var(--content-width);
-  height: 1012.5px;
-  margin-top: var(--space-section);
-  margin-left: var(--page-margin);
-  border-radius: var(--radius-media);
-  background: var(--color-accent);
+  z-index: 1; /* text above the spark */
 }
 
-.media {
-  overflow: hidden; /* clips the film to the 35px corners */
+/* The spark, placed as in the PDF: its horizontal strokes 576px below the intro's cap top */
+.about .linework {
+  top: calc(var(--about-top) - 263.8px);
+  overflow: visible; /* the long diagonals carry on up behind the gallery */
 }
 
-.media__poster,
-.media__frame {
+.about__intro {
+  grid-column: 1 / 5;
+  margin-left: 3px;
+  white-space: nowrap;
+}
+
+.about__statement {
+  grid-column: 6 / 13;
+  margin-top: -6px; /* cap top 6px above the intro's, as in the PDF */
+}
+
+/* display-l (52px, shared with the closing statement); both titles use the same
+   0.1475em tracking. */
+.about__line1 { margin-left: 9.6px; }  /* x 829.6, as in the PDF */
+.about__line2 {
+  width: fit-content;
+  margin-left: auto;        /* ends on the right edge of the grid */
+  margin-right: -0.1475em;  /* (minus the trailing letter-spacing) */
+}
+
+/* ---------- Film (full width) ---------- */
+
+.film {
+  height: 1080px; /* full width 16:9 */
+}
+
+.film__media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--color-background);
+  pointer-events: none;
+}
+
+.film__frame {
+  position: absolute;
+  inset: 0;
+  opacity: 0; /* until the film first plays (no fade) */
+}
+
+.film__media.is-playing .film__frame {
+  opacity: 1;
+}
+
+/* 16:9 player at the full width of the section (which is 16:9 too), so the whole
+   film shows — no crop here, unlike the hero */
+.film__frame iframe {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -600,47 +825,14 @@ svg {
   border: 0;
 }
 
-.media__poster {
-  object-fit: cover;
+.film .grid {
+  position: relative;
+  height: 100%;
+  grid-template-rows: 100%;
 }
 
-.media__frame {
-  z-index: 2;
-  background: var(--color-background);
-}
-
-/* The whole block is the play button; the icon stays at its PDF position */
-.media__play {
-  position: absolute;
-  inset: 0;
-  cursor: pointer;
-  transition: opacity 0.5s var(--ease-button);
-}
-
-.media__icon {
-  position: absolute;
-  inset: 0;
-  transform-origin: 900px 467.7px; /* circle centre, in the block */
-  transform: scale(0.7); /* play button at 70% of the PDF size (273 → 191px) */
-  transition: transform 0.6s var(--ease-button);
-}
-
-.media__play:hover .media__icon,
-.media__play:focus-visible .media__icon {
-  transform: scale(0.75);
-}
-
-.media__play:focus-visible {
-  outline: none;
-}
-
-.media__play:focus-visible .media__icon circle {
-  stroke-width: 6;
-}
-
-.media.is-playing .media__play {
-  opacity: 0;
-  pointer-events: none;
+.film .film-controls {
+  opacity: 1; /* always visible here */
 }
 
 /* ---------- Editorial ---------- */
@@ -865,13 +1057,13 @@ svg {
 }
 
 .footer__legal {
-  grid-column: 6 / 9;
-  margin-left: 140.5px; /* x 960.5 in PDF */
-  white-space: nowrap;
+  grid-column: 5 / 9;
+  white-space: nowrap; /* x 668 (was 960.5), to make room for the icons after the nav */
 }
 
 .footer .nav {
-  grid-column: 9 / 13;
+  grid-column: 8 / 13;
+  align-items: center;
 }
 
 /* ---------- Motion (see MOTION-BRIEF.md) ----------
@@ -898,13 +1090,13 @@ svg {
   --display-blur: 0.12em;
 }
 
-/* Top half of the page (hero → video): slower, softer, smoother.
+/* Top half of the page (hero → film): slower, softer, smoother.
    Everything from the editorial section down keeps the base timings above. */
 .hero,
 .trusted,
 .gallery,
-.statement,
-.media {
+.about,
+.film {
   --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);   /* gentle ease-out, no snap */
   --ease-out-strong: cubic-bezier(0.22, 0.61, 0.36, 1);
 

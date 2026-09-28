@@ -30,29 +30,36 @@
     <div class="page-bg__grain"></div>
   </div>
 
-  <!-- Decorative hero linework (vector paths from the PDF, page coordinates).
-       A dim base outline, plus a sheen layer whose gradient band is moved by the
-       script: a timed intro after the title animation, then linked to scroll. -->
-  <svg class="linework" width="1920" height="1400" viewBox="0 0 1920 1400" fill="none" aria-hidden="true">
-    <defs>
-      <path id="lw-1" d="M-94.96 199.84 L184.64 684.12 L80.72 744.12 L-198.88 259.84Z"/>
-      <path id="lw-2" d="M2213.12 960.00L2213.12 840.00L484.21 840.00C459.66 840.00 450.95 807.50 472.21 795.22L969.75 507.96L909.75 404.04L516.13 631.30C494.87 643.57 471.07 619.78 483.35 598.51L1324.64 -858.65L1220.72 -918.65L243.58 773.80C235.15 788.40 223.04 800.52 208.44 808.94L149.03 843.24C144.44 845.89 142.87 851.76 145.52 856.36L161.02 883.20C167.02 893.60 167.02 906.41 161.02 916.80L145.52 943.65C142.87 948.24 144.44 954.11 149.03 956.76L909.75 1395.96L969.75 1292.04L472.21 1004.79C450.95 992.51 459.66 960.00 484.21 960.00L2213.12 960.00"/>
-      <!-- Band runs along the (0.8, 0.6) diagonal; 600 units long, bright in the middle -->
-      <linearGradient id="lw-sheen" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="480" y2="360" gradientTransform="translate(-960 -720)">
-        <stop offset="0" style="stop-color: var(--color-accent-bright); stop-opacity: 0"/>
-        <stop offset="0.5" style="stop-color: var(--color-accent-bright); stop-opacity: 1"/>
-        <stop offset="1" style="stop-color: var(--color-accent-bright); stop-opacity: 0"/>
-      </linearGradient>
-    </defs>
-    <g class="linework__base" stroke="var(--color-linework)" stroke-width="0.75">
-      <use href="#lw-1"/><use href="#lw-2"/>
-    </g>
-    <g class="linework__sheen" stroke="url(#lw-sheen)" stroke-linejoin="round" stroke-linecap="round">
-      <g class="linework__glow" stroke-width="7"><use href="#lw-1"/><use href="#lw-2"/></g>
-      <g class="linework__halo" stroke-width="2.5"><use href="#lw-1"/><use href="#lw-2"/></g>
-      <g class="linework__core" stroke-width="1"><use href="#lw-1"/><use href="#lw-2"/></g>
-    </g>
+
+  <!-- Social icons (18px line icons, drawn on a 20px grid), used in the header and footer -->
+  <svg class="icon-sprite" width="0" height="0" aria-hidden="true">
+    <symbol id="icon-instagram" viewBox="0 0 20 20">
+      <rect x="2.5" y="2.5" width="15" height="15" rx="4.2"/>
+      <circle cx="10" cy="10" r="3.5"/>
+      <circle cx="14.35" cy="5.65" r="0.85" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="icon-email" viewBox="0 0 20 20">
+      <rect x="2" y="4.25" width="16" height="11.5" rx="1.6"/>
+      <path d="M2.6 5.2L10 10.9L17.4 5.2"/>
+    </symbol>
+    <symbol id="icon-facebook" viewBox="0 0 20 20">
+      <circle cx="10" cy="10" r="7.5"/>
+      <path d="M11 17.5V9.1C11 7.6 11.8 6.8 13.3 6.8H14.2M8.3 11H13.6"/>
+    </symbol>
   </svg>
+
+  <!-- ============ Hero film ============ -->
+  <!-- The company film (YouTube 9edV64Y75zY) plays muted behind the header and hero,
+       full screen height, with YouTube's own controls hidden (pause + sound buttons
+       are in the hero). A dark overlay sits over it while the title animates in; the
+       first scroll after that lifts the overlay and the hero text instead of
+       scrolling (see "Hero reveal" script). The poster only shows when the film
+       doesn't autoplay (reduced motion / Data Saver) or hasn't started yet. -->
+  <div class="hero-media">
+    <img class="hero-media__poster" src="assets/company-film-poster.jpg" alt="" width="1789" height="1013" decoding="async">
+    <div class="hero-media__frame"><div id="hero-player"></div></div>
+    <div class="hero-media__overlay" aria-hidden="true"></div>
+  </div>
 
   <!-- ============ Header ============ -->
   <header class="section header" id="top">
@@ -75,8 +82,14 @@
       <nav class="nav body-s" aria-label="Primary">
         <a href="#work">Work</a>
         <a href="#about">About</a>
-        <a href="#capabilities">Capabilities</a>
+        <a>Media</a><!-- no link yet -->
         <a href="#contact">Contact</a>
+        <!-- TODO: social links not set yet (no href) — add the real Instagram / Facebook pages and email address -->
+        <ul class="social">
+          <li><a aria-label="LUDIC Asia on Instagram"><svg width="18" height="18" aria-hidden="true"><use href="#icon-instagram"/></svg></a></li>
+          <li><a aria-label="Email LUDIC Asia"><svg width="18" height="18" aria-hidden="true"><use href="#icon-email"/></svg></a></li>
+          <li><a aria-label="LUDIC Asia on Facebook"><svg width="18" height="18" aria-hidden="true"><use href="#icon-facebook"/></svg></a></li>
+        </ul>
       </nav>
     </div>
   </header>
@@ -88,11 +101,25 @@
         <span class="line hero__kicker display-s" style="letter-spacing:0.1943em">Impact by</span>
         <span class="line hero__title display-xl" style="letter-spacing:0.1846em">Design</span>
       </h1>
-      <p class="hero__sub body-xl nowrap" data-reveal="lines" data-reveal-delay="700">
+      <p class="hero__sub body-xl nowrap trim" data-reveal="lines" data-reveal-delay="700">
         <span class="line">We design and deliver the</span>
         <span class="line">experiences where leaders,</span>
         <span class="line">ideas and influence meet</span>
       </p>
+      <!-- Film controls: pause/play and sound on/off only -->
+      <div class="film-controls">
+        <button class="film-controls__btn film-controls__pause" type="button" aria-label="Pause the film">
+          <svg class="icon-pause" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M4 2.5V11.5M10 2.5V11.5"/></svg>
+          <svg class="icon-play" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M4.2 2.4L11.6 7L4.2 11.6Z"/></svg>
+        </button>
+        <button class="film-controls__btn film-controls__sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+          <svg width="16" height="14" viewBox="0 0 16 14" aria-hidden="true">
+            <path d="M1.5 5H4.3L8 2V12L4.3 9H1.5Z"/>
+            <path class="icon-sound-off" d="M10.8 5L14.3 8.5M14.3 5L10.8 8.5"/>
+            <path class="icon-sound-on" d="M10.6 4.6C11.3 5.2 11.7 6.1 11.7 7C11.7 7.9 11.3 8.8 10.6 9.4M12.6 2.8C13.8 3.9 14.5 5.4 14.5 7C14.5 8.6 13.8 10.1 12.6 11.2"/>
+          </svg>
+        </button>
+      </div>
     </div>
   </section>
 
@@ -178,27 +205,68 @@
     </div>
   </section>
 
-  <!-- ============ More than an event ============ -->
-  <section class="section statement" id="about">
+  <!-- ============ About ("LUDIC Video Section [02] .pdf") ============ -->
+  <section class="section about" id="about">
+    <!-- "The spark": the decorative linework (vector paths from the original PDF), exactly
+         as it was behind the hero — only moved here. A dim base outline, plus a sheen
+         layer whose gradient band is moved by the script as the page scrolls. It sits
+         under the gallery above and the film below. -->
+    <svg class="linework" width="1920" height="1400" viewBox="0 0 1920 1400" fill="none" aria-hidden="true">
+      <defs>
+        <path id="lw-1" d="M-94.96 199.84 L184.64 684.12 L80.72 744.12 L-198.88 259.84Z"/>
+        <path id="lw-2" d="M2213.12 960.00L2213.12 840.00L484.21 840.00C459.66 840.00 450.95 807.50 472.21 795.22L969.75 507.96L909.75 404.04L516.13 631.30C494.87 643.57 471.07 619.78 483.35 598.51L1324.64 -858.65L1220.72 -918.65L243.58 773.80C235.15 788.40 223.04 800.52 208.44 808.94L149.03 843.24C144.44 845.89 142.87 851.76 145.52 856.36L161.02 883.20C167.02 893.60 167.02 906.41 161.02 916.80L145.52 943.65C142.87 948.24 144.44 954.11 149.03 956.76L909.75 1395.96L969.75 1292.04L472.21 1004.79C450.95 992.51 459.66 960.00 484.21 960.00L2213.12 960.00"/>
+        <!-- Band runs along the (0.8, 0.6) diagonal; 600 units long, bright in the middle -->
+        <linearGradient id="lw-sheen" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="480" y2="360" gradientTransform="translate(-960 -720)">
+          <stop offset="0" style="stop-color: var(--color-accent-bright); stop-opacity: 0"/>
+          <stop offset="0.5" style="stop-color: var(--color-accent-bright); stop-opacity: 1"/>
+          <stop offset="1" style="stop-color: var(--color-accent-bright); stop-opacity: 0"/>
+        </linearGradient>
+      </defs>
+      <g class="linework__base" stroke="var(--color-linework)" stroke-width="0.75">
+        <use href="#lw-1"/><use href="#lw-2"/>
+      </g>
+      <g class="linework__sheen" stroke="url(#lw-sheen)" stroke-linejoin="round" stroke-linecap="round">
+        <g class="linework__glow" stroke-width="7"><use href="#lw-1"/><use href="#lw-2"/></g>
+        <g class="linework__halo" stroke-width="2.5"><use href="#lw-1"/><use href="#lw-2"/></g>
+        <g class="linework__core" stroke-width="1"><use href="#lw-1"/><use href="#lw-2"/></g>
+      </g>
+    </svg>
     <div class="grid">
-      <h2 class="statement__text display-xl trim" data-reveal="lines-side" data-fill>
-        <span class="line statement__line1" style="letter-spacing:0.1453em">More than</span>
-        <span class="line statement__line2" style="letter-spacing:0.1496em">An event</span>
+      <p class="about__intro body-m trim" data-reveal="lines">
+        <span class="line">Ludic Asia designs and delivers high-impact</span>
+        <span class="line">summits and special events that bring together</span>
+        <span class="line">leadership, innovation, and influence through</span>
+        <span class="line">strategy, precision, and immersive execution.</span>
+      </p>
+      <h2 class="about__statement display-l trim" data-reveal="lines-side" data-fill>
+        <span class="line about__line1" style="letter-spacing:0.1475em">More than</span>
+        <span class="line about__line2" style="letter-spacing:0.1475em">An event</span>
       </h2>
     </div>
   </section>
 
-  <!-- ============ Media ============ -->
-  <section class="section media" aria-label="LUDIC company film" data-reveal="rise">
-    <!-- Company film on YouTube (youtu.be/9edV64Y75zY). The poster shows until play is
-         pressed; only then is the YouTube player (privacy-enhanced mode) loaded. -->
-    <img class="media__poster" src="assets/company-film-poster.jpg" alt="" width="1789" height="1013" loading="lazy" decoding="async">
-    <button class="media__play" type="button" aria-label="Play the LUDIC company film">
-      <svg class="media__icon" width="1800" height="1012.5" viewBox="60 4216.2 1800 1012.5" aria-hidden="true">
-        <circle cx="960" cy="4683.9" r="136.6" fill="none" stroke="var(--color-text)" stroke-width="3.87"/>
-        <path fill="var(--color-text)" d="M924.31 4629.65L924.31 4738.07C924.31 4741.87 928.53 4744.15 931.71 4742.06L1014.16 4687.85C1017.03 4685.96 1017.03 4681.76 1014.16 4679.87L931.71 4625.66C928.53 4623.57 924.31 4625.85 924.31 4629.65Z"/>
-      </svg>
-    </button>
+  <!-- ============ Film ============ -->
+  <!-- Full-width film, playing muted when on screen, with the same pause + sound buttons
+       as the hero (no overlay text). For now it's the same YouTube film as the hero. -->
+  <section class="section film" aria-label="LUDIC company film">
+    <div class="film__media">
+      <div class="film__frame"><div id="film-player"></div></div>
+    </div>
+    <div class="grid">
+      <div class="film-controls">
+        <button class="film-controls__btn film-controls__pause" type="button" aria-label="Pause the film">
+          <svg class="icon-pause" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M4 2.5V11.5M10 2.5V11.5"/></svg>
+          <svg class="icon-play" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M4.2 2.4L11.6 7L4.2 11.6Z"/></svg>
+        </button>
+        <button class="film-controls__btn film-controls__sound" type="button" aria-label="Turn sound on" aria-pressed="false">
+          <svg width="16" height="14" viewBox="0 0 16 14" aria-hidden="true">
+            <path d="M1.5 5H4.3L8 2V12L4.3 9H1.5Z"/>
+            <path class="icon-sound-off" d="M10.8 5L14.3 8.5M14.3 5L10.8 8.5"/>
+            <path class="icon-sound-on" d="M10.6 4.6C11.3 5.2 11.7 6.1 11.7 7C11.7 7.9 11.3 8.8 10.6 9.4M12.6 2.8C13.8 3.9 14.5 5.4 14.5 7C14.5 8.6 13.8 10.1 12.6 11.2"/>
+          </svg>
+        </button>
+      </div>
+    </div>
   </section>
 
   <!-- ============ Editorial ============ -->
@@ -252,9 +320,9 @@
   <section class="section closing">
     <div class="grid">
       <h2 class="closing__text display-l trim" data-reveal="lines-side" data-fill>
-        <span class="line closing__line1" style="letter-spacing:0.1913em">Creators that</span>
-        <span class="line closing__line2" style="letter-spacing:0.1898em">Speak your</span>
-        <span class="line closing__line3" style="letter-spacing:0.1786em">Language</span>
+        <span class="line closing__line1" style="letter-spacing:0.1475em">Creators that</span>
+        <span class="line closing__line2" style="letter-spacing:0.1475em">Speak your</span>
+        <span class="line closing__line3" style="letter-spacing:0.1475em">Language</span>
       </h2>
     </div>
   </section>
@@ -262,7 +330,7 @@
   <!-- ============ Contact ============ -->
   <section class="section contact" id="contact">
     <div class="grid">
-      <h2 class="contact__heading body-xl nowrap trim" data-reveal="blur">Get in touch</h2>
+      <h2 class="contact__heading body-xl nowrap trim" data-reveal="blur">Contact us for a proposal</h2>
       <form class="contact__form body-l" data-reveal="fade" action="#" onsubmit="return false">
         <label class="row field">
           <input class="field__input" type="text" name="name" placeholder=" " autocomplete="name">
@@ -301,8 +369,13 @@
       <nav class="nav body-s" aria-label="Footer">
         <a href="#work">Work</a>
         <a href="#about">About</a>
-        <a href="#capabilities">Capabilities</a>
+        <a>Media</a><!-- no link yet -->
         <a href="#contact">Contact</a>
+        <ul class="social">
+          <li><a aria-label="LUDIC Asia on Instagram"><svg width="18" height="18" aria-hidden="true"><use href="#icon-instagram"/></svg></a></li>
+          <li><a aria-label="Email LUDIC Asia"><svg width="18" height="18" aria-hidden="true"><use href="#icon-email"/></svg></a></li>
+          <li><a aria-label="LUDIC Asia on Facebook"><svg width="18" height="18" aria-hidden="true"><use href="#icon-facebook"/></svg></a></li>
+        </ul>
       </nav>
     </div>
   </footer>
@@ -348,20 +421,22 @@
     });
   })();
 
-  /* Hero linework sheen: a band of light rests on the upper-left strokes from
-     load, and scrolling carries it across the shape (reverses on scroll up). */
+  /* The spark (linework) sheen: a band of light rests on the upper-left strokes,
+     and scrolling carries it across the shape (reverses on scroll up). It starts
+     moving when the top of the drawing is START of the way down the screen. */
   (function () {
     var svg = document.querySelector(".linework");
     var grad = document.getElementById("lw-sheen");
     if (!svg || !grad || !document.documentElement.classList.contains("motion-ready")) return;
 
     var REST = -60, END = 2600; // band offset along the diagonal
+    var START = 0.25;           // 0 = when the drawing's top reaches the top of the screen (original timing)
     var queued = false;
 
     function render() {
       queued = false;
       var r = svg.getBoundingClientRect();
-      var p = Math.max(0, Math.min(1, -r.top / (r.height * 0.85)));
+      var p = Math.max(0, Math.min(1, (window.innerHeight * START - r.top) / (r.height * 0.85)));
       var o = REST + (END - REST) * p;
       grad.setAttribute("gradientTransform", "translate(" + (o * 0.8).toFixed(1) + " " + (o * 0.6).toFixed(1) + ")");
     }
@@ -407,27 +482,6 @@
     document.querySelectorAll(".gallery__item").forEach(function (el) { io.observe(el); });
   })();
 
-  /* Company film: pressing play swaps the poster for the YouTube player, autoplaying. */
-  (function () {
-    var media = document.querySelector(".media");
-    var play = media && media.querySelector(".media__play");
-    if (!play) return;
-    var VIDEO_ID = "9edV64Y75zY";
-
-    play.addEventListener("click", function () {
-      var frame = document.createElement("iframe");
-      frame.className = "media__frame";
-      frame.src = "https://www.youtube-nocookie.com/embed/" + VIDEO_ID +
-        "?autoplay=1&rel=0&playsinline=1&modestbranding=1";
-      frame.title = "LUDIC company film";
-      frame.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
-      frame.allowFullscreen = true;
-      frame.referrerPolicy = "strict-origin-when-cross-origin";
-      media.appendChild(frame);
-      media.classList.add("is-playing");
-    }, { once: true });
-  })();
-
   /* Background video: load after the page, skip when motion or data should be saved,
      pause while the tab is hidden. */
   (function () {
@@ -435,8 +489,16 @@
     if (!video) return;
     var conn = navigator.connection || {};
     var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var saveData = conn.saveData || /2g|3g/.test(conn.effectiveType || "");
+    var saveData = conn.saveData || /2g/.test(conn.effectiveType || "");
     if (reduceMotion || saveData) return; // the still stays in place
+
+    // On a slower (3G) connection, every screen size gets the light 4 MB mobile version
+    if (conn.effectiveType === "3g") {
+      var sources = video.querySelectorAll("source");
+      sources.forEach(function (s, i) {
+        if (i === 0) s.removeAttribute("media"); else s.remove();
+      });
+    }
 
     function start() {
       video.querySelectorAll("source[data-src]").forEach(function (s) {
@@ -458,6 +520,199 @@
     });
   })();
 
+  /* Films (hero + film section): the company film from YouTube, muted and looping,
+     with YouTube's own controls hidden. Our two buttons pause/play and turn sound
+     on/off. Each film plays only while on screen and the tab is visible, and doesn't
+     autoplay for reduced motion / Data Saver / 2G (the hero shows its poster until
+     play is pressed). The film section's player is loaded well before it scrolls
+     into view, so it's already playing when it arrives. The player appears as soon
+     as the film first plays (before that YouTube would show its thumbnail and play
+     button); it's looped by jumping back to the start just before the end, so
+     YouTube's end screen never appears. */
+  (function () {
+    var HERO_VIDEO = "9edV64Y75zY"; // company film
+    var FILM_VIDEO = "8SXyLLmyVBE"; // film section (youtu.be/8SXyLLmyVBE)
+    var conn = navigator.connection || {};
+    var autoplay = !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+      !(conn.saveData || /2g/.test(conn.effectiveType || ""));
+    var fileUrl = location.protocol === "file:"; // YouTube won't play without a web address
+
+    var queue = [], apiLoading = false;
+    function withYT(fn) {
+      if (window.YT && YT.Player) return fn();
+      queue.push(fn);
+      if (apiLoading) return;
+      apiLoading = true;
+      window.onYouTubeIframeAPIReady = function () { queue.forEach(function (f) { f(); }); };
+      var tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(tag);
+    }
+
+    function film(media, playerId, videoId, controls, preload) {
+      var pauseBtn = controls.querySelector(".film-controls__pause");
+      var soundBtn = controls.querySelector(".film-controls__sound");
+      var player = null, ready = false, loopTimer = 0;
+      var userPaused = !autoplay; // the visitor's choice; off-screen pauses don't count
+      var inView = false;
+
+      function isPlaying() { return ready && player.getPlayerState() === 1; }
+
+      function updateButtons() {
+        var paused = !isPlaying() && (userPaused || !ready);
+        pauseBtn.classList.toggle("is-paused", paused);
+        pauseBtn.setAttribute("aria-label", paused ? "Play the film" : "Pause the film");
+        var soundOn = ready && !player.isMuted();
+        soundBtn.setAttribute("aria-pressed", soundOn ? "true" : "false");
+        soundBtn.setAttribute("aria-label", soundOn ? "Turn sound off" : "Turn sound on");
+      }
+
+      function sync() {
+        if (!ready) return;
+        var state = player.getPlayerState();
+        if (!userPaused && inView && !document.hidden) {
+          if (state !== 1 && state !== 3) player.playVideo();
+        } else if (state === 1 || state === 3) {
+          player.pauseVideo();
+        }
+      }
+
+      function loop() { // restart just before the end, before YouTube's end screen
+        clearInterval(loopTimer);
+        loopTimer = setInterval(function () {
+          var d = player.getDuration(), t = player.getCurrentTime();
+          if (d && t > d - 0.6) player.seekTo(0, true);
+        }, 250);
+      }
+
+      function create() {
+        if (player || fileUrl) return;
+        player = true; // creating
+        withYT(function () {
+          var vars = {
+            // YouTube's own autoplay for the hero (starting it by script flashes a
+            // pause symbol in the middle); the film section starts off screen instead
+            autoplay: preload ? 0 : 1, mute: 1, controls: 0, disablekb: 1, fs: 0, rel: 0,
+            playsinline: 1, iv_load_policy: 3, modestbranding: 1, cc_load_policy: 0
+          };
+          if (/^https?:$/.test(location.protocol)) vars.origin = location.origin;
+          player = new YT.Player(playerId, {
+            host: "https://www.youtube-nocookie.com",
+            videoId: videoId,
+            playerVars: vars,
+            events: {
+              onError: function () { media.classList.add("is-still"); },
+              onReady: function () {
+                ready = true;
+                // (already muted by the player settings; the hero autoplays by itself,
+                // and telling it to play again would flash YouTube's symbol)
+                if (preload) sync();
+                updateButtons();
+                loop();
+              },
+              onStateChange: function (e) {
+                if (e.data === 1) { media.classList.add("is-playing"); media.classList.remove("is-still"); }
+                if (e.data === 0) { player.seekTo(0, true); player.playVideo(); }
+                updateButtons();
+              }
+            }
+          });
+        });
+      }
+
+      pauseBtn.addEventListener("click", function () {
+        userPaused = isPlaying();
+        if (!player) create(); else sync();
+        updateButtons();
+      });
+
+      soundBtn.addEventListener("click", function () {
+        if (!ready) { userPaused = false; create(); return; }
+        if (player.isMuted()) {
+          player.unMute();
+          if (player.getVolume() === 0) player.setVolume(100);
+          if (userPaused) { userPaused = false; sync(); }
+        } else {
+          player.mute();
+        }
+        updateButtons();
+      });
+
+      // Plays while on screen or within a screen of it, so it's already running
+      // (not still buffering) by the time it scrolls into view
+      new IntersectionObserver(function (entries) {
+        inView = entries[0].isIntersecting;
+        sync();
+      }, { rootMargin: "100% 0px" }).observe(media);
+      document.addEventListener("visibilitychange", sync);
+
+      if (!autoplay || fileUrl) { media.classList.add("is-still"); updateButtons(); return; }
+      if (!preload) create();
+      else new IntersectionObserver(function (entries, obs) { // load ~2 screens ahead
+        if (!entries[0].isIntersecting) return;
+        obs.disconnect();
+        create();
+      }, { rootMargin: "200% 0px" }).observe(media);
+      updateButtons();
+    }
+
+    var hero = document.querySelector(".hero-media");
+    var heroControls = document.querySelector(".hero .film-controls");
+    if (hero && heroControls) film(hero, "hero-player", HERO_VIDEO, heroControls, false);
+
+    var section = document.querySelector(".film__media");
+    var sectionControls = document.querySelector(".film .film-controls");
+    if (section && sectionControls) film(section, "film-player", FILM_VIDEO, sectionControls, true);
+  })();
+
+  /* Hero reveal: the page opens on the film under a dark overlay while the title
+     animates in. As the title finishes, the overlay and the hero text fade away,
+     revealing the full film. The page is never held:
+     scrolling works normally throughout, and scrolling before the fade starts
+     simply starts it straight away. Without motion, the overlay lifts on the first
+     scroll. */
+  (function () {
+    var media = document.querySelector(".hero-media");
+    var hero = document.querySelector(".hero");
+    var headline = document.querySelector(".hero__headline");
+    var controls = document.querySelector(".hero .film-controls");
+    if (!media || !hero || !headline) return;
+    var motion = document.documentElement.classList.contains("motion-ready");
+
+    var INTRO_MS = 2000; // the fade starts as the title finishes sliding in (its colour fill ends ~0.9s later)
+    var HOLD_MS = 0;     // extra time the title stays before the fade starts
+
+    var revealed = false, introDone = !motion;
+
+    function reveal() {
+      if (revealed) return;
+      revealed = true;
+      media.classList.add("is-revealed");
+      hero.classList.add("is-revealed");
+    }
+
+    // Scrolling (or opening the page scrolled down / on a link) reveals once the
+    // title has finished, or at once if the page opens part-way down
+    if (window.scrollY > 0 || location.hash) reveal();
+    window.addEventListener("scroll", function () {
+      if (window.scrollY > 0 && introDone) reveal();
+    }, { passive: true });
+
+    function onIntroDone() {
+      introDone = true;
+      if (controls) controls.classList.add("is-in");
+      if (window.scrollY > 0) reveal();
+      else if (motion) setTimeout(reveal, HOLD_MS);
+    }
+    if (!motion) onIntroDone();
+    else if (headline.classList.contains("is-in")) setTimeout(onIntroDone, INTRO_MS);
+    else new MutationObserver(function (m, obs) {
+      if (!headline.classList.contains("is-in")) return;
+      obs.disconnect();
+      setTimeout(onIntroDone, INTRO_MS);
+    }).observe(headline, { attributes: true, attributeFilter: ["class"] });
+  })();
+
   /* NOT FROM THE DESIGN — provisional: scale the fixed 1920px canvas to fit
      narrower viewports so the layout never breaks. Remove when a responsive
      design exists. */
@@ -467,6 +722,8 @@
       var w = document.documentElement.clientWidth;
       var s = w < 1920 ? w / 1920 : 1;
       page.style.zoom = s === 1 ? "" : s;
+      // screen height in canvas px, so the hero film always fills the screen
+      document.documentElement.style.setProperty("--screen-h", window.innerHeight / s + "px");
       document.documentElement.classList.toggle("is-scaled", s !== 1);
     }
     fit();
